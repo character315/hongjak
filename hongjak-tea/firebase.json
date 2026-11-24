@@ -1,0 +1,5 @@
+{
+  "firestore": { "rules": "backend/firestore.rules", "indexes": "backend/firestore.indexes.json" },
+  "hosting": { "public": "frontend", "ignore": ["**/.*", "**/node_modules/**"] },
+  "emulators": { "firestore": { "port": 8080 }, "ui": { "enabled": false } }
+}

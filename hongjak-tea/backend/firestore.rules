@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function admin() { return signedIn() && request.auth.token.firebase.sign_in_provider == 'password' && exists(/databases/$(database)/documents/admins/$(request.auth.uid)); }
+    function validTea(d) {
+      return d.keys().hasAll(['name','brand','category','stock','description','imageUrl','archived','createdAt','updatedAt'])
+        && d.keys().hasOnly(['name','brand','category','stock','description','imageUrl','archived','createdAt','updatedAt'])
+        && d.name is string && d.name.size() > 0 && d.name.size() <= 100
+        && d.brand is string && d.brand.size() > 0 && d.brand.size() <= 100
+        && d.category in ['가향차','싱글오리진','블렌드티','동양차','허브티']
+        && d.stock in ['available','low','out']
+        && d.description is string && d.description.size() <= 1500
+        && d.imageUrl is string && d.imageUrl.size() <= 500
+        && d.archived is bool && d.createdAt is timestamp && d.updatedAt == request.time;
+    }
+    function validReview(d) {
+      return d.keys().hasAll(['author','body','rating','createdAt','updatedAt'])
+        && d.keys().hasOnly(['author','body','rating','createdAt','updatedAt'])
+        && d.author is string && d.author.size() > 0 && d.author.size() <= 30
+        && d.body is string && d.body.size() > 0 && d.body.size() <= 1000
+        && d.rating is int && d.rating >= 1 && d.rating <= 5
+        && d.createdAt is timestamp && d.updatedAt == request.time;
+    }
+    function activeTea(teaId) {
+      return exists(/databases/$(database)/documents/teas/$(teaId)) && get(/databases/$(database)/documents/teas/$(teaId)).data.archived == false;
+    }
+    match /admins/{uid} {
+      allow get: if signedIn() && request.auth.uid == uid;
+      allow list, create, update, delete: if false;
+    }
+    match /teas/{teaId} {
+      // 카탈로그는 공개. 보관은 UI 숨김이며 비밀 데이터 보호 수단이 아님.
+      allow read: if true;
+      allow create: if admin() && validTea(request.resource.data) && request.resource.data.createdAt == request.time && request.resource.data.archived == false;
+      allow update: if admin() && validTea(request.resource.data) && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if false; // 시음평의 보존을 위한 소프트 삭제(archived).
+      match /reviews/{uid} {
+        allow read: if admin() || activeTea(teaId);
+        allow create: if signedIn() && request.auth.uid == uid && activeTea(teaId) && validReview(request.resource.data) && request.resource.data.createdAt == request.time;
+        allow update: if signedIn() && request.auth.uid == uid && activeTea(teaId) && validReview(request.resource.data) && request.resource.data.createdAt == resource.data.createdAt;
+        allow delete: if admin();
+      }
+    }
+  }
+}

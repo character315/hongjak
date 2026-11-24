@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f5ee"><title>홍작 찻장</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <header class="top"><a class="brand" href="./" aria-label="홍작 찻장 홈"><img id="logo" alt="홍작" hidden><span id="wordmark">홍작<span> 찻장</span></span></a><div class="top-actions"><span id="mode" class="tag">연결 중</span><button id="admin-toggle" class="quiet" disabled>관리자</button></div></header>
+  <main>
+    <section class="intro"><p class="eyebrow">HONGJAK TEA COLLECTION</p><h1>홍작 찻장</h1><p class="motto">Where there is tea, there is hope.</p><p class="intro-note">동방에 있는 차를 찾아보고, 한 잔의 기록을 남겨 보세요.</p></section>
+    <p id="notice" class="notice" role="status" hidden></p>
+    <section id="admin-bar" class="admin-bar" hidden><div><strong>관리자 모드</strong><p>차를 등록하거나 수정하고, 보관된 차를 복원할 수 있습니다.</p></div><button id="new-tea" class="primary">차 등록</button></section>
+    <section class="catalog" aria-labelledby="catalog-title">
+      <div class="section-heading"><div><p class="eyebrow">TEA LIBRARY</p><h2 id="catalog-title">차 목록 <span id="count" class="count"></span></h2></div><label class="search"><span class="sr-only">차 이름 또는 브랜드 검색</span><input id="search" type="search" placeholder="차 이름 또는 브랜드 검색"></label></div>
+      <div id="filters" class="filters" aria-label="차 종류"></div>
+      <label id="archive-filter" class="archive-filter" hidden><input type="checkbox" id="show-archived"> 보관된 차 포함</label>
+      <div id="tea-grid" class="tea-grid" aria-live="polite"><p>차 목록을 불러오는 중입니다.</p></div>
+    </section>
+  </main>
+  <footer>홍작 찻장 <span>·</span> Tea collection & tasting notes</footer>
+  <dialog id="tea-dialog"><div class="dialog-head"><p class="eyebrow">TASTING NOTES</p><button class="close" data-close="tea-dialog" aria-label="닫기">닫기</button></div><div id="tea-detail"></div><section id="review-section"><h3>시음평</h3><div id="review-list" class="reviews"></div><form id="review-form"><h3 id="review-heading">시음평 남기기</h3><label>닉네임<input name="author" maxlength="30" required placeholder="부원 닉네임"></label><label>평점<select name="rating" required><option value="5">5점 · 아주 좋음</option><option value="4">4점 · 좋음</option><option value="3">3점 · 보통</option><option value="2">2점 · 아쉬움</option><option value="1">1점 · 취향 아님</option></select></label><label>시음평<textarea name="body" maxlength="1000" required rows="4" placeholder="향, 맛, 여운 등 자유롭게 남겨 주세요."></textarea></label><p id="review-hint" class="muted">회원가입 없이 작성할 수 있습니다. 같은 브라우저에서는 기존 시음평을 수정할 수 있습니다.</p><p class="form-error" id="review-error" role="alert"></p><button type="submit" class="primary">시음평 저장</button></form></section></dialog>
+  <dialog id="edit-dialog"><div class="dialog-head"><h2 id="edit-title">차 등록</h2><button class="close" data-close="edit-dialog">닫기</button></div><form id="tea-form"><label>차 이름<input name="name" maxlength="100" required></label><label>브랜드<input name="brand" maxlength="100" required></label><label>종류<select name="category" id="category-select" required></select></label><label>상태<select name="stock"><option value="available">비치 중</option><option value="low">소량 남음</option><option value="out">소진</option></select></label><label>설명<textarea name="description" maxlength="1500" rows="4"></textarea></label><label>사진 URL 또는 저장소 상대 경로<input name="imageUrl" maxlength="500" placeholder="https://… 또는 assets/tea.jpg"></label><p class="muted">선택 항목입니다. 이미지가 없거나 로딩되지 않으면 기본 디자인을 표시합니다.</p><p class="form-error" id="edit-error" role="alert"></p><button class="primary" type="submit">저장</button></form></dialog>
+  <dialog id="login-dialog"><div class="dialog-head"><h2>관리자 로그인</h2><button class="close" data-close="login-dialog">닫기</button></div><form id="login-form"><label>이메일<input name="email" type="email" autocomplete="username" required></label><label>비밀번호<input name="password" type="password" autocomplete="current-password" required></label><p id="login-error" class="form-error" role="alert"></p><button type="submit" class="primary">로그인</button></form><div id="demo-login" hidden><p>미리보기 전용 관리자 모드입니다. 변경 내용은 이 브라우저에만 저장됩니다.</p><button id="demo-admin" class="primary">관리자 기능 체험</button></div></dialog>
+  <noscript>이 사이트를 사용하려면 JavaScript를 활성화해 주세요.</noscript>
+  <script type="module" src="./js/app.js"></script>
+</body></html>
